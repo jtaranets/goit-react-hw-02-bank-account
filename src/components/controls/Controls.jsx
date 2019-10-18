@@ -16,23 +16,37 @@ class Controls extends Component {
     balance: PropTypes.number.isRequired,
   };
 
-  notify = () => {
+  notifyLittleMoney = () => {
     toast("Sorry, you don't have enough money on your account", {
       autoClose: 2000,
       position: 'top-center',
     });
   };
 
+  notifyNegativeMoney = () => {
+    toast("You can't put negative amount, please try again", {
+      autoClose: 2000,
+      position: 'top-center',
+    });
+  };
+
   onChange = e => {
-    this.setState({ amount: parseFloat(e.target.value) });
+    const amount = () =>
+      e.target.value === '' ? '' : parseFloat(e.target.value);
+    this.setState({ amount: amount() });
   };
 
   onClick = e => {
     const { balance } = this.props;
     const { amount } = this.state;
+    if (amount < 0) {
+      this.notifyNegativeMoney();
+      this.setState({ amount: '', type: '', date: '' });
+      return;
+    }
     const withdrawal = () => (e.target.name === 'Withdrawal' ? amount : 0);
     if (balance < withdrawal()) {
-      this.notify();
+      this.notifyLittleMoney();
       this.setState({ amount: '', type: '', date: '' });
       return;
     }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import uuid from 'uuid';
-import transaction from '../transactions.json';
+// import transaction from '../transactions.json';
 import Controls from './controls/Controls';
 import Balance from './balance/Balance';
 import TransactionHistory from './transactionHistory/TransactionHistory';
@@ -8,19 +8,13 @@ import styles from './Dashboard.module.css';
 
 class Dashboard extends Component {
   state = {
-    transaction,
+    transaction: [],
     balance: {
       Deposit: 0,
       Withdrawal: 0,
       balance: 0,
     },
   };
-
-  componentDidMount() {
-    const { transaction } = this.state;
-    const balance = this.getValues(transaction);
-    this.setState({ balance });
-  }
 
   handleClick = async amount => {
     const newOperation = { ...amount, id: uuid.v4() };
@@ -38,7 +32,7 @@ class Dashboard extends Component {
         acc[item.type]
           ? { ...acc, [item.type]: (acc[item.type] += item.amount) }
           : { ...acc, [item.type]: item.amount },
-      {},
+      { Deposit: 0, Withdrawal: 0 },
     );
     values.balance = values.Deposit - values.Withdrawal;
     return values;
