@@ -24,7 +24,7 @@ class Controls extends Component {
   };
 
   notifyNegativeMoney = () => {
-    toast("You can't put negative amount, please try again", {
+    toast('The amount needs to be bigger than zero', {
       autoClose: 2000,
       position: 'top-center',
     });
@@ -39,28 +39,28 @@ class Controls extends Component {
   onClick = e => {
     const { balance } = this.props;
     const { amount } = this.state;
-    if (amount < 0) {
+    if (amount > 0) {
+      const withdrawal = () => (e.target.name === 'Withdrawal' ? amount : 0);
+      if (balance < withdrawal()) {
+        this.notifyLittleMoney();
+        this.setState({ amount: '', type: '', date: '' });
+        return;
+      }
+      const date = new Date();
+      this.setState(
+        {
+          type: e.target.name,
+          date: date.toLocaleString(),
+        },
+        () => {
+          this.props.addOperation(this.state);
+          this.setState({ amount: '', type: '', date: '' });
+        },
+      );
+    } else {
       this.notifyNegativeMoney();
       this.setState({ amount: '', type: '', date: '' });
-      return;
     }
-    const withdrawal = () => (e.target.name === 'Withdrawal' ? amount : 0);
-    if (balance < withdrawal()) {
-      this.notifyLittleMoney();
-      this.setState({ amount: '', type: '', date: '' });
-      return;
-    }
-    const date = new Date();
-    this.setState(
-      {
-        type: e.target.name,
-        date: date.toLocaleString(),
-      },
-      () => {
-        this.props.addOperation(this.state);
-        this.setState({ amount: '', type: '', date: '' });
-      },
-    );
   };
 
   render() {
