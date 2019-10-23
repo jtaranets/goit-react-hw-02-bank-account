@@ -2,19 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './Balance.module.css';
 
+const fixAmount = amount =>
+  amount.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
+
 const Balance = ({ changeBalance }) => {
   const deposits = changeBalance.Deposit;
   const withdrawals = changeBalance.Withdrawal;
   const { balance } = changeBalance;
-  const depositsToFormat = deposits
-    .toFixed(2)
-    .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
-  const withdrawalsToFormat = withdrawals
-    .toFixed(2)
-    .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
-  const balanceToFormat = balance
-    .toFixed(2)
-    .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
+  const depositsToFormat = fixAmount(deposits);
+  const withdrawalsToFormat = fixAmount(withdrawals);
+  const balanceToFormat = fixAmount(balance);
   return (
     <section className={styles.balance}>
       <span className={styles.arrow_increase}>

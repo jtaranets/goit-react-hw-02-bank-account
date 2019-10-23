@@ -1,29 +1,20 @@
 import React, { Component } from 'react';
 import uuid from 'uuid';
-// import transaction from '../transactions.json';
 import Controls from './controls/Controls';
 import Balance from './balance/Balance';
 import TransactionHistory from './transactionHistory/TransactionHistory';
-import styles from './Dashboard.module.css';
+import styles from './App.module.css';
 
 class Dashboard extends Component {
   state = {
     transaction: [],
-    balance: {
-      Deposit: 0,
-      Withdrawal: 0,
-      balance: 0,
-    },
   };
 
-  handleClick = async amount => {
+  handleClick = amount => {
     const newOperation = { ...amount, id: uuid.v4() };
-    await this.setState(state => ({
+    this.setState(state => ({
       transaction: [...state.transaction, newOperation],
     }));
-    const { transaction } = this.state;
-    const updBalance = this.getValues(transaction);
-    this.setState(state => ({ ...state, balance: updBalance }));
   };
 
   getValues = transaction => {
@@ -39,7 +30,8 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { transaction, balance } = this.state;
+    const { transaction } = this.state;
+    const balance = this.getValues(transaction);
     return (
       <div className={styles.dashboard}>
         <Controls addOperation={this.handleClick} balance={balance.balance} />

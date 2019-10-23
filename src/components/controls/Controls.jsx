@@ -7,8 +7,6 @@ import styles from './Controls.module.css';
 class Controls extends Component {
   state = {
     amount: '',
-    type: '',
-    date: '',
   };
 
   static propTypes = {
@@ -43,23 +41,22 @@ class Controls extends Component {
       const withdrawal = () => (e.target.name === 'Withdrawal' ? amount : 0);
       if (balance < withdrawal()) {
         this.notifyLittleMoney();
-        this.setState({ amount: '', type: '', date: '' });
+        this.setState({ amount: '' });
         return;
       }
       const date = new Date();
-      this.setState(
-        {
-          type: e.target.name,
-          date: date.toLocaleString(),
-        },
-        () => {
-          this.props.addOperation(this.state);
-          this.setState({ amount: '', type: '', date: '' });
-        },
-      );
+      const result = {
+        date: date.toLocaleString(),
+        amount,
+        type: e.target.name,
+      };
+      this.props.addOperation(result);
+      this.setState({ amount: '' });
+      // () => {
+      // };
     } else {
       this.notifyNegativeMoney();
-      this.setState({ amount: '', type: '', date: '' });
+      this.setState({ amount: '' });
     }
   };
 
